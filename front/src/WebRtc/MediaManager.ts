@@ -19,7 +19,6 @@ export type StartScreenSharingCallback = (media: MediaStream) => void;
 export type StopScreenSharingCallback = (media: MediaStream) => void;
 export type ReportCallback = (message: string) => void;
 export type ShowReportCallBack = (userId: string, userName: string|undefined) => void;
-export type HelpCameraSettingsCallBack = () => void;
 
 import {cowebsiteCloseButtonId} from "./CoWebsiteManager";
 
@@ -51,9 +50,6 @@ export class MediaManager {
         this.mySoundMeterElement.childNodes.forEach((value: ChildNode, index) => {
             this.mySoundMeterElement.children.item(index)?.classList.remove('active');
         });*/
-
-        //Check of ask notification navigator permission
-        this.getNotification();
 
         localStreamStore.subscribe((result) => {
             if (result.type === 'error') {
@@ -438,49 +434,24 @@ export class MediaManager {
         });
     }
 
-    public getNotification(){
-        //Get notification
-        if (!DISABLE_NOTIFICATIONS && window.Notification && Notification.permission !== "granted") {
-            if (this.checkNotificationPromise()) {
-                Notification.requestPermission().catch((err) => {
-                    console.error(`Notification permission error`, err);
-                });
-            } else {
-                Notification.requestPermission();
-            }
+    public requestNotification(){
+        if (window.Notification && Notification.permission !== "granted") {
+            Notification.requestPermission();
         }
-    }
-
-    /**
-     * Return true if the browser supports the modern version of the Notification API (which is Promise based) or false
-     * if we are on Safari...
-     *
-     * See https://developer.mozilla.org/en-US/docs/Web/API/Notifications_API/Using_the_Notifications_API
-     */
-    private checkNotificationPromise(): boolean {
-        try {
-            Notification.requestPermission().then();
-        } catch(e) {
-            return false;
-        }
-
-        return true;
     }
 
     public createNotification(userName: string){
-        if(this.focused){
+        if(!document.hidden){
             return;
         }
-        if (window.Notification && Notification.permission === "granted") {
-            const title = 'WorkAdventure';
+        if (Notification.permission === "granted") {
+            const title = `${userName} wants to discuss with you`;
             const options = {
-                body: `Hi! ${userName} wants to discuss with you, don't be afraid!`,
                 icon: '/resources/logos/logo-WA-min.png',
                 image: '/resources/logos/logo-WA-min.png',
                 badge: '/resources/logos/logo-WA-min.png',
             };
             new Notification(title, options);
-            //new Notification(`Hi! ${userName} wants to discuss with you, don't be afraid!`);
         }
     }
 }

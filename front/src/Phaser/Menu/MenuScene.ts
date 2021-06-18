@@ -303,6 +303,9 @@ export class MenuScene extends Phaser.Scene {
             case 'toggleFullscreen':
                 this.toggleFullscreen();
                 break;
+            case 'enableNotification':
+                this.enableNotification();
+                break;
             case 'adminConsoleButton':
                 gameManager.getCurrentGameScene(this).ConsoleGlobalMessageManager.activeMessageConsole();
                 break;
@@ -356,5 +359,9 @@ export class MenuScene extends Phaser.Scene {
 
     public isDirty(): boolean {
         return false;
+    }
+
+    private enableNotification() {
+        mediaManager.requestNotification();
     }
 }
