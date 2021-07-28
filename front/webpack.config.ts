@@ -22,6 +22,11 @@ entries.iframe_api = "./src/iframe_api.ts";
 module.exports = {
     entry: entries,
     mode: mode,
+    watchOptions: {
+        ignored: /node_modules/,
+        aggregateTimeout: 500,
+        poll: 1000,
+    },
     devtool: isDevelopment ? "inline-source-map" : "source-map",
     devServer: {
         contentBase: "./dist",
@@ -31,6 +36,11 @@ module.exports = {
         historyApiFallback: {
             rewrites: [{ from: /^_\/.*$/, to: "/index.html" }],
             disableDotRule: true,
+        },
+        watchOptions: {
+            ignored: /node_modules/,
+            aggregateTimeout: 500,
+            poll: 1000,
         },
     },
     module: {
@@ -201,6 +211,8 @@ module.exports = {
             MAX_USERNAME_LENGTH: 8,
             MAX_PER_GROUP: 4,
             DISPLAY_TERMS_OF_USE: false,
+            WEBEX_AUTHORIZATION_URL: null,
+            WEBEX_GLOBAL_SPACE_ID: null,
         }),
     ],
 } as Configuration & WebpackDevServer.Configuration;
